@@ -39,7 +39,7 @@ typedef struct {
 
 
 // Funcion para convertir la paleta a escala de grises
-void convertir_a_grises(PALETARGB* paleta, int num_colores) {
+/* void convertir_a_grises(PALETARGB* paleta, int num_colores) {
     int i;   
     int gris;
 
@@ -50,7 +50,52 @@ void convertir_a_grises(PALETARGB* paleta, int num_colores) {
         paleta[i].rgbBlue = gris;
     }
 
+} */
+
+
+// Zair Samuel Montoya Bello, Sebastian 
+void convertir_a_grises(PALETARGB* paleta, int num_colores) {
+    _asm {
+        mov ebx, 0              ; i = 0
+        mov edi, paleta         ; edi = paleta
+        mov esi, num_colores    ; esi = num_colores
+
+    loop_start:
+        cmp ebx, esi
+        jge loop_end
+
+        lea eax, [edi + ebx*4]  ; eax = &paleta[i]
+
+        ; cargar componentes
+        mov dl, [eax + 0]       ; B
+        mov ch, [eax + 1]       ; G
+        mov cl, [eax + 2]       ; R
+
+        ; suma en 32 bits
+        xor eax, eax
+        movzx eax, cl           ; eax = R
+        movzx ecx, ch           ; ecx = G
+        add eax, ecx
+        movzx ecx, dl           ; ecx = B
+        add eax, ecx
+
+        ; dividir suma / 3
+        xor edx, edx
+        mov ecx, 3
+        div ecx                 ; eax = gris
+
+        ; guardar gris
+        mov [edi + ebx*4 + 0], al  ; B
+        mov [edi + ebx*4 + 1], al  ; G
+        mov [edi + ebx*4 + 2], al  ; R
+
+        inc ebx
+        jmp loop_start
+
+    loop_end:
+    }
 }
+
 
 
 
