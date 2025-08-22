@@ -55,15 +55,15 @@ typedef struct {
 
 // Zair Samuel Montoya Bello, Sebastian 
 void convertir_a_grises(PALETARGB* paleta, int num_colores) {
-    _asm {
+    __asm {
         mov ebx, 0              ; i = 0
-        mov edi, paleta         ; edi = paleta
-        mov esi, num_colores    ; esi = num_colores
 
     loop_start:
+        mov esi, [ebp+12]       ; cargar num_colores
         cmp ebx, esi
         jge loop_end
 
+        mov edi, [ebp+8]        ; cargar paleta
         lea eax, [edi + ebx*4]  ; eax = &paleta[i]
 
         ; cargar componentes
@@ -85,6 +85,7 @@ void convertir_a_grises(PALETARGB* paleta, int num_colores) {
         div ecx                 ; eax = gris
 
         ; guardar gris
+        mov edi, [ebp+8]        ; recargar paleta
         mov [edi + ebx*4 + 0], al  ; B
         mov [edi + ebx*4 + 1], al  ; G
         mov [edi + ebx*4 + 2], al  ; R
@@ -93,8 +94,10 @@ void convertir_a_grises(PALETARGB* paleta, int num_colores) {
         jmp loop_start
 
     loop_end:
+        
     }
 }
+
 
 
 
