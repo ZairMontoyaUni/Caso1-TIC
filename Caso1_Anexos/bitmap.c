@@ -53,7 +53,7 @@ typedef struct {
 } */
 
 
-// Zair Samuel Montoya Bello, Sebastian 
+// Zair Samuel Montoya Bello, Sebastian Vargas Otero
 void convertir_a_grises(PALETARGB* paleta, int num_colores) {
     __asm {
         mov ebx, 0              ; i = 0
